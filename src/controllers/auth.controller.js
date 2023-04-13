@@ -1,5 +1,6 @@
 const User = require('../database/models/User.models');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Controller for the login request
 exports.login = (req, res) => {
@@ -14,7 +15,9 @@ exports.login = (req, res) => {
             let match = await bcrypt.compare(req.body.password, user.password);
 
             if (match) {
-                return res.status(200).send({ status: "success", message: "User successfully logged in" });
+                const accessToken = jwt.sign({ email: user.email,  role: user.role }, process.env.TOKEN_SECRET);
+
+                return res.status(200).send({ status: "success", message: "User successfully logged in", token: accessToken });
             } else {
                 // If the password is incorrect return an error
                 return res.status(401).send({ status: "error", message: "Bad credentials" });
@@ -52,4 +55,8 @@ exports.register = (req, res) => {
             return res.status(200).send({ status: 'success', message: 'User successfully created' });
         }
     })
+}
+
+exports.check = (req, res) => {
+    res.send({ message: "Victoire !" })
 }

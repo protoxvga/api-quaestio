@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+const authenticateJWT = require("../middlewares/authenticateJWT");
+
 const authControllers = require("../controllers/auth.controller");
+
+router.route('/check')
+.get(authenticateJWT, authControllers.check);
 
 // Get the login page and handle login requests
 router.route('/login')
