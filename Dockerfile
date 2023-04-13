@@ -2,7 +2,7 @@
 FROM node:16-alpine
 
 # Set the working directory inside the container
-WORKDIR /cinema-blog
+WORKDIR /quaestio
 
 # Copy the package.json and yarn.lock files
 COPY package.json package-lock.json ./
