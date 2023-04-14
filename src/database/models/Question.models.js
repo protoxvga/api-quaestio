@@ -20,7 +20,6 @@ const Question = new Schema({
     },
     category: {
         type: String,
-        enum: ['reactjs', 'nodejs', 'angular'],
         required: true,
     },
     created_at: {
