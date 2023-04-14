@@ -3,7 +3,7 @@ const router = express.Router();
 
 const authenticateJWT = require("../middlewares/authenticateJWT");
 
-const authControllers = require("../controllers/auth.controller");
+const authControllers = require("../controllers/auth.controllers");
 
 router.route('/check')
 .get(authenticateJWT, authControllers.check);

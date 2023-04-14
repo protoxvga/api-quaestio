@@ -15,7 +15,7 @@ exports.login = (req, res) => {
             let match = await bcrypt.compare(req.body.password, user.password);
 
             if (match) {
-                const accessToken = jwt.sign({ email: user.email,  role: user.role }, process.env.TOKEN_SECRET);
+                const accessToken = jwt.sign({ id: user._id,  isExpert: user.isExpert }, process.env.TOKEN_SECRET);
 
                 return res.status(200).send({ status: "success", message: "User successfully logged in", token: accessToken });
             } else {

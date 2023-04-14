@@ -3,11 +3,9 @@ const express = require("express");
 const router = express.Router();
 
 const authRoutes = require("./auth.routes");
+const questionsRoutes = require("./questions.routes");
 
 router.use("/auth", authRoutes);
-
-router.get('/', function (req, res) {
-    res.send(res.json({ message: "Hello world !" }));
-});
+router.use("/", questionsRoutes);
 
 module.exports = router;
