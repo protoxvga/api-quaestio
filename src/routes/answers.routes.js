@@ -9,4 +9,7 @@ router.route('/answers')
 .get(authenticateJWT, answersControllers.list)
 .post(authenticateJWT, answersControllers.create);
 
+router.route('/up-vote')
+.put(authenticateJWT, answersControllers.upVoteAnswer)
+
 module.exports = router;
