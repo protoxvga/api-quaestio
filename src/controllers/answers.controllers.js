@@ -31,7 +31,14 @@ exports.list = async (req, res) => {
         const question = await Question.findById(req.query.id)
         .populate({
             path: 'answers',
-            populate: { path: 'author', select: 'firstname lastname fullname email' }
+            populate: { 
+                path: 'author', 
+                select: 'firstname lastname fullname email' 
+            },
+            populate: {
+                path: 'votes.user',
+                select: 'firstname lastname fullname email'
+            }
         })
         .populate('author', 'firstname lastname fullname email');
 
@@ -54,12 +61,32 @@ exports.upVoteAnswer = async function(req, res) {
         }
 
         // Call the `upvote` method on the answer to upvote it
-        answer.upvote(req.user);
+        answer.upVote(req.user);
 
         // Save the updated answer to the database
         await answer.save();
 
-        res.status(200).send({ message: 'Answer upvoted successfully' });
+        res.status(200).send({ message: 'Answer up voted successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.downVoteAnswer = async function(req, res) {
+    try {
+        const answer = await Answer.findById(req.query.id);
+
+        if (!answer) {
+            return res.status(404).send({ message: 'Answer not found' });
+        }
+
+        // Call the `upvote` method on the answer to upvote it
+        answer.downVote(req.user);
+
+        // Save the updated answer to the database
+        await answer.save();
+
+        res.status(200).send({ message: 'Answer down voted successfully' });
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
