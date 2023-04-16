@@ -36,14 +36,33 @@ const AnswerSchema = new Schema({
     }
 });
 
-AnswerSchema.methods.upvote = function(user) {
+AnswerSchema.methods.upVote = function(user) {
     const existingVote = this.votes.find(vote => String(vote.user) === String(user.id));
 
     if (!existingVote) {
         this.votes.push({ user: user.id, vote: 1 });
         this.upvotes++;
+    } else if (existingVote.vote === -1) {
+        const index = this.votes.findIndex(vote => String(vote.user) === String(user.id));
+        this.votes.splice(index, 1);
+        this.upvotes++;
     } else {
-        throw new Error('User has already upvoted this answer');
+        throw new Error('User has already up voted this answer');
+    }
+};
+
+AnswerSchema.methods.downVote = function(user) {
+    const existingVote = this.votes.find(vote => String(vote.user) === String(user.id));
+
+    if (!existingVote) {
+        this.votes.push({ user: user.id, vote: -1 });
+        this.upvotes--;
+    } else if (existingVote.vote === 1) {
+        const index = this.votes.findIndex(vote => String(vote.user) === String(user.id));
+        this.votes.splice(index, 1);
+        this.upvotes--;
+    } else {
+        throw new Error('User has already down voted this answer');
     }
 };
 

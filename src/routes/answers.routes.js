@@ -12,4 +12,7 @@ router.route('/answers')
 router.route('/up-vote')
 .put(authenticateJWT, answersControllers.upVoteAnswer)
 
+router.route('/down-vote')
+.put(authenticateJWT, answersControllers.downVoteAnswer)
+
 module.exports = router;
