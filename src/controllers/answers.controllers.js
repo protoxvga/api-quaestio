@@ -1,5 +1,5 @@
-const Answer = require('../database/models/Answer.models');
-const Question = require('../database/models/Question.models');
+const Answer = require('../database/models/Answer.model');
+const Question = require('../database/models/Question.model');
 
 exports.create = async (req, res) => {
     if (!req.body.content)
@@ -15,7 +15,8 @@ exports.create = async (req, res) => {
             vote: 0,
         })
     
-        question.answers.push(answer);
+        await answer.save();
+        question.answers.push(answer._id);
         await question.save();
     
         return res.status(200).json({ status: 'success', message: 'Answer successfully created' });
@@ -28,6 +29,10 @@ exports.create = async (req, res) => {
 exports.list = async (req, res) => {
     try {
         const question = await Question.findById(req.query.id)
+        .populate({
+            path: 'answers',
+            populate: { path: 'author', select: 'firstname lastname fullname email' }
+        })
         .populate('author', 'firstname lastname fullname email');
 
         if (question) {
@@ -39,3 +44,23 @@ exports.list = async (req, res) => {
         res.status(500).send({ error: err.message, status: "error" })
     }
 }
+
+exports.upVoteAnswer = async function(req, res) {
+    try {
+        const answer = await Answer.findById(req.query.id);
+
+        if (!answer) {
+            return res.status(404).send({ message: 'Answer not found' });
+        }
+
+        // Call the `upvote` method on the answer to upvote it
+        answer.upvote(req.user);
+
+        // Save the updated answer to the database
+        await answer.save();
+
+        res.status(200).send({ message: 'Answer upvoted successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};

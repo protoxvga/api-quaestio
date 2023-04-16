@@ -1,4 +1,4 @@
-const Question = require('../database/models/Question.models');
+const Question = require('../database/models/Question.model');
 
 exports.create = async (req, res) => {
     if (!req.body.title || !req.body.content || !req.body.category)
