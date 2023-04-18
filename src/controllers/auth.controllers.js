@@ -14,7 +14,9 @@ exports.login = (req, res) => {
             // Compare the password with the hashed password
             let match = await bcrypt.compare(req.body.password, user.password);
 
+            // If the password is correct
             if (match) {
+                // Create a new token with the user id and the isExpert field
                 const accessToken = jwt.sign({ id: user._id,  isExpert: user.isExpert }, process.env.TOKEN_SECRET);
 
                 return res.status(200).send({ status: "success", message: "User successfully logged in", token: accessToken });

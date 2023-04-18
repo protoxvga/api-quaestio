@@ -36,12 +36,16 @@ const AnswerSchema = new Schema({
     }
 });
 
+// Upvote answer
 AnswerSchema.methods.upVote = function(user) {
+    // Check if the user has already voted
     const existingVote = this.votes.find(vote => String(vote.user) === String(user.id));
 
+    // If the user has not voted, add a new vote
     if (!existingVote) {
         this.votes.push({ user: user.id, vote: 1 });
         this.upvotes++;
+    // If the user has already voted down, remove the vote and add an upvote
     } else if (existingVote.vote === -1) {
         const index = this.votes.findIndex(vote => String(vote.user) === String(user.id));
         this.votes.splice(index, 1);
@@ -52,11 +56,14 @@ AnswerSchema.methods.upVote = function(user) {
 };
 
 AnswerSchema.methods.downVote = function(user) {
+    // Check if the user has already voted
     const existingVote = this.votes.find(vote => String(vote.user) === String(user.id));
 
+    // If the user has not voted, add a new vote
     if (!existingVote) {
         this.votes.push({ user: user.id, vote: -1 });
         this.upvotes--;
+    // If the user has already voted up, remove the vote and add a downvote
     } else if (existingVote.vote === 1) {
         const index = this.votes.findIndex(vote => String(vote.user) === String(user.id));
         this.votes.splice(index, 1);
