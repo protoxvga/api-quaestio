@@ -6,7 +6,7 @@ const authenticateJWT = require("../middlewares/authenticateJWT");
 const questionsControllers = require("../controllers/questions.controllers");
 
 router.route('/questions')
-.get(authenticateJWT, questionsControllers.list)
+.get(questionsControllers.list)
 .post(authenticateJWT, questionsControllers.create);
 
 module.exports = router;
