@@ -28,3 +28,27 @@ exports.list = async (req, res) => {
 
     res.status(200).send({ questions: allQuestions, status: "success" })
 }
+
+// Controller to list a question
+exports.get = async (req, res) => {
+    // Find all questions in the database and populate the author field
+    try {
+        const question = await Question.findById(req.params.id)
+        .populate({
+            path: 'answers',
+            populate: { 
+                path: 'author', 
+                select: 'firstname lastname fullname email' 
+            },
+            populate: {
+                path: 'votes.user',
+                select: 'firstname lastname fullname email'
+            }
+        })
+        .populate('author', 'firstname lastname fullname email');
+
+        res.status(200).send({ question: question, status: "success" })
+    } catch {
+        res.status(400).send({ message: "question not found", status: "error" })
+    }
+}

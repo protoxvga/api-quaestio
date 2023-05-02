@@ -10,4 +10,7 @@ router.route('/questions')
 .get(questionsControllers.list)
 .post(authenticateJWT, questionsControllers.create);
 
+router.route('/questions/:id')
+.get(questionsControllers.get)
+
 module.exports = router;
