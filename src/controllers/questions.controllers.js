@@ -39,7 +39,10 @@ exports.get = async (req, res) => {
             populate: { 
                 path: 'author', 
                 select: 'firstname lastname fullname email' 
-            },
+            }
+        })
+        .populate({
+            path: 'answers',
             populate: {
                 path: 'votes.user',
                 select: 'firstname lastname fullname email'
