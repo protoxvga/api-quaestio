@@ -22,11 +22,26 @@ exports.create = async (req, res) => {
 
 // Controller to list all questions in the database
 exports.list = async (req, res) => {
-    // Find all questions in the database and populate the author field
-    const allQuestions = await Question.find()
+    const { title, content } = req.query;
+
+    // Setup filter object
+    let filter = {};
+
+    // If title query parameter is present, add it to the filter
+    if (title) {
+        filter.title = new RegExp(title, 'i'); // 'i' makes it case insensitive
+    }
+
+    // If content query parameter is present, add it to the filter
+    if (content) {
+        filter.content = new RegExp(content, 'i'); // 'i' makes it case insensitive
+    }
+
+    // Find all questions in the database matching the filter and populate the author field
+    const questions = await Question.find(filter)
     .populate('author', 'firstname lastname fullname email isExpert');
 
-    res.status(200).send({ questions: allQuestions, status: "success" })
+    res.status(200).send({ questions: questions, status: "success" })
 }
 
 // Controller to list a question
