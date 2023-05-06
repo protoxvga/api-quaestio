@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
     // Create a new question object and save it to the database
     const question = new Question({
         title: req.body.title,
-        content: req.body.title,
+        content: req.body.content,
         category: req.body.category,
         author: req.user.id,
         created_at: new Date(),
